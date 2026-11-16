@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Nhân Viên - Full Time & Part Time</title>
+    <!-- Liên kết file CSS tách riêng -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header chính -->
+        <header class="app-header">
+            <div class="header-left">
+                <i class="fa-solid fa-users-gear header-icon"></i>
+                <div>
+                    <h1>Hệ Thống Quản Lý Nhân Viên</h1>
+                    <p class="subtitle">Phân loại & Tính lương nhân sự Full-time và Part-time</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="live-clock" id="currentDateTime"></span>
+            </div>
+        </header>
+
+        <!-- Thống kê tổng quan (Dashboard Summary) -->
+        <section class="stats-grid">
+            <div class="stat-card card-total">
+                <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                <div class="stat-content">
+                    <span class="stat-title">Tổng nhân sự</span>
+                    <h3 class="stat-value" id="statTotalEmployees">0</h3>
+                </div>
+            </div>
+            <div class="stat-card card-fulltime">
+                <div class="stat-icon"><i class="fa-solid fa-briefcase"></i></div>
+                <div class="stat-content">
+                    <span class="stat-title">Nhân viên Full-time</span>
+                    <h3 class="stat-value" id="statFullTime">0</h3>
+                </div>
+            </div>
+            <div class="stat-card card-parttime">
+                <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+                <div class="stat-content">
+                    <span class="stat-title">Nhân viên Part-time</span>
+                    <h3 class="stat-value" id="statPartTime">0</h3>
+                </div>
+            </div>
+            <div class="stat-card card-salary">
+                <div class="stat-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+                <div class="stat-content">
+                    <span class="stat-title">Tổng quỹ lương tháng</span>
+                    <h3 class="stat-value" id="statTotalSalary">0 đ</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Khu vực thao tác chính -->
+        <main class="main-layout">
+            <!-- Cột trái: Form nhập liệu & chỉnh sửa thông tin -->
+            <aside class="form-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 id="formTitle"><i class="fa-solid fa-user-plus"></i> Thêm Nhân Viên Mới</h2>
+                    </div>
+                    <form id="employeeForm">
+                        <input type="hidden" id="editEmployeeId">
+
+                        <div class="form-group">
+                            <label for="empCode">Mã nhân viên <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-id-card input-icon"></i>
+                                <input type="text" id="empCode" placeholder="Ví dụ: NV001" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="empName">Họ và tên <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-user input-icon"></i>
+                                <input type="text" id="empName" placeholder="Nhập đầy đủ họ tên..." required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-half">
+                                <label for="empEmail">Email <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-envelope input-icon"></i>
+                                    <input type="email" id="empEmail" placeholder="email@company.com" required>
+                                </div>
+                            </div>
+                            <div class="form-group col-half">
+                                <label for="empPhone">Số điện thoại <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-phone input-icon"></i>
+                                    <input type="tel" id="empPhone" placeholder="09xxxxxxxx" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="empDepartment">Phòng ban <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-building input-icon"></i>
+                                <select id="empDepartment" required>
+                                    <option value="">-- Chọn phòng ban --</option>
+                                    <option value="Kỹ thuật & CNTT">Kỹ thuật & CNTT</option>
+                                    <option value="Kinh doanh">Kinh doanh</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Nhân sự (HR)">Nhân sự (HR)</option>
+                                    <option value="Kế toán & Tài chính">Kế toán & Tài chính</option>
+                                    <option value="Chăm sóc khách hàng">Chăm sóc khách hàng</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Chọn loại hình làm việc -->
+                        <div class="form-group">
+                            <label class="section-label">Hình thức làm việc <span class="required">*</span></label>
+                            <div class="type-selector">
+                                <label class="radio-card active" id="labelFullTime">
+                                    <input type="radio" name="empType" value="fulltime" checked>
+                                    <div class="radio-content">
+                                        <i class="fa-solid fa-briefcase"></i>
+                                        <span>Full-time</span>
+                                    </div>
+                                </label>
+                                <label class="radio-card" id="labelPartTime">
+                                    <input type="radio" name="empType" value="parttime">
+                                    <div class="radio-content">
+                                        <i class="fa-solid fa-clock"></i>
+                                        <span>Part-time</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Các trường riêng của Full-time -->
+                        <div id="fullTimeFields" class="conditional-fields">
+                            <div class="form-group">
+                                <label for="baseSalary">Lương cơ bản (VNĐ/tháng) <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-wallet input-icon"></i>
+                                    <input type="number" id="baseSalary" min="0" step="50000" placeholder="Ví dụ: 10000000">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="allowance">Phụ cấp chức vụ / trách nhiệm (VNĐ)</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-gift input-icon"></i>
+                                    <input type="number" id="allowance" min="0" step="50000" placeholder="Ví dụ: 1500000" value="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Các trường riêng của Part-time -->
+                        <div id="partTimeFields" class="conditional-fields hidden">
+                            <div class="form-group">
+                                <label for="workingHours">Số giờ làm việc trong tháng <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-stopwatch input-icon"></i>
+                                    <input type="number" id="workingHours" min="0" max="720" step="1" placeholder="Ví dụ: 80">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="hourlyRate">Đơn giá theo giờ (VNĐ/giờ) <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-coins input-icon"></i>
+                                    <input type="number" id="hourlyRate" min="0" step="1000" placeholder="Ví dụ: 35000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Khu vực nút bấm điều khiển -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                <i class="fa-solid fa-plus"></i> Thêm nhân viên
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="btnReset">
+                                <i class="fa-solid fa-rotate-left"></i> Làm mới
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </aside>
+
+            <!-- Cột phải: Bộ lọc, Tìm kiếm và Danh sách nhân viên -->
+            <section class="table-container">
+                <div class="card">
+                    <!-- Thanh công cụ (Bộ lọc, Tìm kiếm) -->
+                    <div class="table-toolbar">
+                        <div class="filter-tabs">
+                            <button type="button" class="tab-btn active" data-filter="all">
+                                Tất cả (<span id="countAll">0</span>)
+                            </button>
+                            <button type="button" class="tab-btn" data-filter="fulltime">
+                                Full-time (<span id="countFullTime">0</span>)
+                            </button>
+                            <button type="button" class="tab-btn" data-filter="parttime">
+                                Part-time (<span id="countPartTime">0</span>)
+                            </button>
+                        </div>
+
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" id="searchInput" placeholder="Tìm theo tên hoặc mã nhân viên...">
+                        </div>
+                    </div>
+
+                    <!-- Bảng dữ liệu nhân viên -->
+                    <div class="table-responsive">
+                        <table class="employee-table">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã NV</th>
+                                    <th>Họ và tên</th>
+                                    <th>Phòng ban</th>
+                                    <th>Loại hình</th>
+                                    <th>Chi tiết tính lương</th>
+                                    <th>Tổng lương</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employeeTableBody">
+                                <!-- Dữ liệu sẽ được render bằng JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Thông báo khi không có dữ liệu -->
+                    <div id="emptyState" class="empty-state hidden">
+                        <i class="fa-solid fa-folder-open empty-icon"></i>
+                        <p>Không tìm thấy nhân viên nào phù hợp!</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>&copy; 2026 Hệ thống Quản Lý Nhân Viên Full-time & Part-time. Mã nguồn mở chuẩn HTML - CSS - JS.</p>
+        </footer>
+    </div>
+
+    <!-- Thông báo Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Liên kết file JavaScript tách riêng -->
+    <script src="script.js"></script>
+</body>
+</html>
